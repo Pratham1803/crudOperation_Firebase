@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">CRUD Firebase</string>
+    <string name="btnAdd">Add Data</string>
+    <string name="btnDisplay">Display</string>
+    <string name="btnDelete">Delete</string>
+    <string name="btnUpdate">Update</string>
+    <string name="txtSearchBoxHint">Enter Your Search Item</string>
+    <string name="txtNamehint">Enter Your Name Here</string>
+    <string name="txtEmailHint">Enter Your Email Id Here</string>
+    <string name="txtHead">CRUD Operation with Firebase</string>
+</resources>
