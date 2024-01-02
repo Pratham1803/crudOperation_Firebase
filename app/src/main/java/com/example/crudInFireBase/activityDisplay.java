@@ -1,16 +1,13 @@
-package com.example.dailyroutinetracker;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+package com.example.crudInFireBase;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,7 +34,7 @@ public class activityDisplay extends AppCompatActivity {
 
         recyclerViewDisplay = findViewById(R.id.recyclerViewDisplay);
 
-        displayAdapter = new DisplayAdapter(this,userDataList);
+        displayAdapter = new DisplayAdapter(this, userDataList);
         recyclerViewDisplay.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewDisplay.setAdapter(displayAdapter);
 
@@ -52,7 +49,7 @@ public class activityDisplay extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(newText!="")
+                if (newText != "")
                     dbSearch();
                 return true;
             }
@@ -60,13 +57,14 @@ public class activityDisplay extends AppCompatActivity {
 
         dbShowData();
     }
-    private void dbSearch(){
+
+    private void dbSearch() {
         userDataList.clear();
         String str = txtSearchBox.getQuery().toString();
-        fbDataBase.orderByChild("userName").startAt(str).endAt(str+"~").addValueEventListener(new ValueEventListener() {
+        fbDataBase.orderByChild("userName").startAt(str).endAt(str + "~").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot postSnapShot : snapshot.getChildren()){
+                for (DataSnapshot postSnapShot : snapshot.getChildren()) {
                     UserData user = postSnapShot.getValue(UserData.class);
                     userDataList.add(user);
                 }
@@ -79,13 +77,15 @@ public class activityDisplay extends AppCompatActivity {
             }
         });
     }
-    private void dbShowData(){
+
+    private void dbShowData() {
         fbDataBase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(DataSnapshot postSnapShot : snapshot.getChildren()){
+                for (DataSnapshot postSnapShot : snapshot.getChildren()) {
                     UserData user = postSnapShot.getValue(UserData.class);
-                    Log.d("ReadData", "User Name: "+user.getUserName()+" Email id : "+user.getUserEmailId());
+                    user.setUserId(postSnapShot.getKey());
+                    Log.d("ReadData", "User Name: " + user.getUserName() + " Email id : " + user.getUserEmailId()+"Id : "+user.getUserId());
                     userDataList.add(user);
                 }
                 displayAdapter.notifyDataSetChanged();

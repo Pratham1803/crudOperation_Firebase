@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:117606356219:android:277665fc7af1f2f46ccc5e",
         "android_client_info": {
-          "package_name": "com.example.dailyroutinetracker"
+          "package_name": "com.example.crudInFireBase"
         }
       },
       "oauth_client": [],

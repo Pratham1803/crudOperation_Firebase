@@ -1,5 +1,6 @@
-package com.example.dailyroutinetracker;
+package com.example.crudInFireBase;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,8 +11,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class activityAddRecord extends AppCompatActivity {
 
@@ -19,17 +27,32 @@ public class activityAddRecord extends AppCompatActivity {
     EditText txtEmailId;
     Button btnDelete;
     Button btnAddRecord;
+    String[] data;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("tblUser");
 
-    public void btnAddRecord_Clicked(View v){
-        if(btnAddRecord.getText().toString().equals(R.string.btnAdd)) {
+    public void btnAddRecord_Clicked(View v) {
+
+        if (btnAddRecord.getText().toString().equals("Add Data")) {
             UserData user = new UserData(txtName.getText().toString(), txtEmailId.getText().toString());
             databaseReference.push().setValue(user);
             Toast.makeText(this, "Data Added", Toast.LENGTH_SHORT).show();
-        }
-        else if(btnAddRecord.getText().toString().equals(R.string.btnUpdate)){
+            Log.d("ErrorMsg", "Data added");
+        } else if (btnAddRecord.getText().toString().equals("Update")) {
+            Map<String, Object > map = new HashMap<>();
+            map.put("userEmailId",txtEmailId.getText().toString());
+            map.put("userName",txtName.getText().toString());
 
+            databaseReference.child(data[2]).updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    Toast.makeText(activityAddRecord.this, "Updated", Toast.LENGTH_SHORT).show();
+                }
+            });
+            Intent i = new Intent(this, activityDisplay.class);
+            startActivity(i);
+            btnAddRecord.setText(R.string.btnAdd);
         }
         reset();
     }
@@ -46,21 +69,21 @@ public class activityAddRecord extends AppCompatActivity {
 
         try {
             Intent intent = getIntent();
-            String[] data = intent.getStringArrayExtra("DataTransfer");
+            data = intent.getStringArrayExtra("DataTransfer");
             fillTextBox(data);
-        }catch (Exception e){
-            Log.d("ErrorMsg", "onCreate: "+e.toString());
+        } catch (Exception e) {
+            Log.d("ErrorMsg", "onCreate: " + e.toString());
         }
     }
 
-    public void fillTextBox(String[] data){
+    public void fillTextBox(String[] data) {
         txtName.setText(data[0]);
         txtEmailId.setText(data[1]);
         btnAddRecord.setText(R.string.btnUpdate);
         btnDelete.setVisibility(View.VISIBLE);
     }
 
-    private void reset(){
+    private void reset() {
         txtEmailId.setText("");
         txtName.setText("");
     }

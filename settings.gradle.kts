@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DailyRoutineTracker"
+rootProject.name = "crudInFireBase"
 include(":app")
  
