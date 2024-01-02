@@ -76,6 +76,13 @@ public class activityAddRecord extends AppCompatActivity {
         }
     }
 
+    public void btnDelete_Clicked(View v){
+        Toast.makeText(this, "Data" + data[2], Toast.LENGTH_SHORT).show();
+        databaseReference.child(data[2]).removeValue();
+        Intent i = new Intent(this, activityDisplay.class);
+        startActivity(i);
+    }
+
     public void fillTextBox(String[] data) {
         txtName.setText(data[0]);
         txtEmailId.setText(data[1]);
